@@ -108,15 +108,14 @@ struct RockScissorsPaperGame {
             guard
                 let compareResult: GameResult = .init(users: rsp, computer: computerRsp)
             else { return }
-            print(compareResult.description)
+//            print("유저 입력 값: ", userInput, "컴퓨터 입력 값 : ", computerInput)
+            print("당신이", compareResult.description)
         }
         catch {
             print(error)
         }
     }
-    
-    // func validateUserInput
-    
+        
     func receiveUserInput() throws -> Int {
         print("가위(1), 바위(2), 보(3), 종료(0) : ", terminator: " ")
         guard
@@ -129,86 +128,108 @@ struct RockScissorsPaperGame {
         return userInput
     }
 }
+
+struct muk_chi_bar {
+    enum InputError: Error {
+        case invalid
+    }
+    
+    func start() {
+        var userWins = 0
+        var computerWins = 0
+        var userHasLead = true
+        var gameIsOver = false
+        
+        print("묵찌빠 게임을 시작합니다.")
+        
+        while true {
+            do {
+                if gameIsOver {
+                    break
+                }
+                
+                if userHasLead {
+                    let userRSPInput = try receiveUserInputRSP()
+                    let computerRSPInput = Int.random(in: 1...3)
+                    
+                    let userChoice = try RockScissorsPaper(input: userRSPInput)
+                    let computerChoice = try RockScissorsPaper(input: computerRSPInput)
+                    
+                    print("사용자: \(userChoice), 컴퓨터: \(computerChoice)")
+                    
+                    if let rspResult = GameResult(users: userChoice, computer: computerChoice) {
+                        if rspResult == .win {
+                            print("가위바위보에서 사용자가 이겼습니다!")
+                            userHasLead = false
+                        } else if rspResult == .lose {
+                            print("가위바위보에서 컴퓨터가 이겼습니다!")
+                            userHasLead = false
+                        } else {
+                            print("가위바위보에서 비겼습니다.")
+                        }
+                    } else {
+                        print("잘못된 입력입니다. 다시 시도하세요.")
+                    }
+                }
+                
+                if !userHasLead {
+                    let userMukChiBarInput = try receiveUserInputMukChiBar()
+                    let computerMukChiBarInput = Int.random(in: 1...3)
+                    
+                    let userMukChiBarChoice = try RockScissorsPaper(input: userMukChiBarInput)
+                    let computerMukChiBarChoice = try RockScissorsPaper(input: computerMukChiBarInput)
+                    
+                    print("사용자: \(userMukChiBarChoice), 컴퓨터: \(computerMukChiBarChoice)")
+                    
+                    // 묵찌빠 이긴 조건 수정
+                    if userMukChiBarChoice == computerMukChiBarChoice {
+                        print("묵찌빠에서 사용자가 이겼습니다!")
+                        userWins += 1
+                        gameIsOver = true // 이긴 플레이어가 나오면 게임 종료
+                    } else {
+                        print("다시 가위바위보를 진행합니다.")
+                        userHasLead = true
+                    }
+                }
+                
+                print("현재 스코어 - 사용자: \(userWins), 컴퓨터: \(computerWins)")
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func receiveUserInputRSP() throws -> Int {
+        print("가위(1), 바위(2), 보(3) 선택: ", terminator: " ")
+        guard
+            let input: String = readLine(),
+            let userInput = Int(input),
+            [1, 2, 3].contains(userInput)
+        else {
+            throw InputError.invalid
+        }
+        return userInput
+    }
+    
+    func receiveUserInputMukChiBar() throws -> Int {
+        print("묵(1), 찌(2), 빠(3) 선택: ", terminator: " ")
+        guard
+            let input: String = readLine(),
+            let userInput = Int(input),
+            [1, 2, 3].contains(userInput)
+        else {
+            throw InputError.invalid
+        }
+        return userInput
+    }
+}
+
+let mukChiBarGame = muk_chi_bar()
+mukChiBarGame.start()
+
+
+
 let game = RockScissorsPaperGame()
-game.start()
+//game.start()
 
-/// 가위바위보 입력
-//func startsRockScissorsPaper() {
-//    print("가위(1), 바위(2), 보(3), 종료(0) : ", terminator: " ")
-//
-//    guard
-//        let input: String = readLine(),
-//        let users = Int(input)
-//    else {
-//        printScissorsRockPaperResult(with: .error)
-//        return
-//    }
-//
-//    let computer = Int.random(in: 1...3)
-//
-//    let compareResult: GameResult = .init(users: users, computer: computer)
-////        printScissorsRockPaperResult(with: compareResult)
-//}
-
-////가위바위보 결과출력
-//func printScissorsRockPaperResult(with result: GameResult) {
-//    print(result.description)
-//
-//    switch result {
-//    case .win:
-//        startRockScissorsPaper(gameResult: .win, turn: .user)
-//    case .lose:
-//        startRockScissorsPaper(gameResult: .win, turn: .computer)
-//    case .draw:
-//        startsRockScissorsPaper()
-//    case .retry:
-//        startsRockScissorsPaper()
-//    case .exit: return
-//    case .error: return
-//    }
-//}
-////묵찌빠 입력
-//func startRockScissorsPaper(gameResult: GameResult, turn: Turns) {
-//        print("[\(turn) 턴] 묵(1), 찌(2), 빠(3)!<종료 : 0> : ",terminator: " ")
-//
-//        guard let input: String = readLine(), let users = Int(input) else {
-//        printScissorsRockPaperResult(with: .error)
-//            return
-//        }
-//
-//        let computer = Int.random(in: 1...3)
-//
-//        compareRockScissorsPaper(users: users, computer: computer, turn: turn)
-//}
-//
-////묵찌빠 결과비교
-//// divide and conquer
-//// 잘게 나누고, 나눈 아이들을 결합해서 정복하는것
-//func compareRockScissorsPaper(users: Int, computer: Int, turn: Turns) {
-//    let compareResult: GameResult = .init(users: users, computer: computer)
-//    let nextTurn: Turns = compareResult == .win ? .user : .computer
-//    printResultRockScissorsPaper(game: compareResult, turn: nextTurn)
-//}
-//
-////묵찌빠 결과출력
-//func printResultRockScissorsPaper(game: GameResult, turn: Turns) {
-//    switch game {
-//    case .win:
-//        print("\(turn)의 턴입니다")
-//        startRockScissorsPaper(gameResult: .win, turn: .user)
-//    case .lose:
-//        print("\(turn)의 턴입니다")
-//        startRockScissorsPaper(gameResult: .lose, turn: .computer)
-//    case .draw:
-//        print("\(turn)의 승리!")
-//    case .exit:
-//        print("게임 종료")
-//    default:
-//        print("잘못된 입력입니다. 다시 시도해주세요")
-//        startRockScissorsPaper(gameResult: .lose, turn: .computer)
-//    }
-//}
-//
-//게임 호출
-//startsRockScissorsPaper()
 
