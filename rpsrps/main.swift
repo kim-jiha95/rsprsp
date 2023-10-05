@@ -90,8 +90,6 @@ enum RockScissorsPaper: Int {
     }
 }
 
-struct mukChiBar {}
-
 struct RockScissorsPaperGame {
     enum InputError: Error {
         case invalid
@@ -135,8 +133,6 @@ struct muk_chi_bar {
     }
     
     func start() {
-        var userWins = 0
-        var computerWins = 0
         var userHasLead = true
         var gameIsOver = false
         
@@ -181,18 +177,16 @@ struct muk_chi_bar {
                     
                     print("사용자: \(userMukChiBarChoice), 컴퓨터: \(computerMukChiBarChoice)")
                     
-                    // 묵찌빠 이긴 조건 수정
+                    // 묵찌빠 이긴 조건
                     if userMukChiBarChoice == computerMukChiBarChoice {
                         print("묵찌빠에서 사용자가 이겼습니다!")
-                        userWins += 1
-                        gameIsOver = true // 이긴 플레이어가 나오면 게임 종료
+                        gameIsOver = true
                     } else {
                         print("다시 가위바위보를 진행합니다.")
                         userHasLead = true
                     }
                 }
                 
-                print("현재 스코어 - 사용자: \(userWins), 컴퓨터: \(computerWins)")
             } catch {
                 print(error)
             }
